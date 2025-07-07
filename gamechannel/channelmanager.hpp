@@ -154,7 +154,7 @@ private:
   std::set<Callbacks*> callbacks;
 
     /** OnChainUpdate Callbacks registered.  */
-  std::set<OnChainUpdateCallback onChainUpdateCallbacks;
+  std::set<OnChainUpdateCallback*> onChainUpdateCallbacks;
 
   /**
    * Tries to apply a local move to the current state.  Returns true if
