@@ -231,6 +231,10 @@ ChannelManager::ProcessOnChain (const uint256& blk, const unsigned h,
   ResetMinedTxid (onChainSender, pendingPutStateOnChain);
   ResetMinedTxid (onChainSender, pendingDispute);
   exists = true;
+
+  for (auto* cb : onChainUpdateCallbacks)
+      cb->OnChainUpdateReceived(proof);
+
   boardStates.UpdateOnChain (meta, reinitState, proof);
 
   if (disputeHeight == 0)
@@ -461,6 +465,18 @@ void
 ChannelManager::UnregisterCallback (Callbacks& cb)
 {
   callbacks.erase (&cb);
+}
+
+void
+ChannelManager::RegisterOnChainUpdateCallback (OnChainUpdateCallback& cb)
+{
+  onChainUpdateCallbacks.insert (&cb);
+}
+
+void
+ChannelManager::UnregisterOnChainUpdateCallback (OnChainUpdateCallback& cb)
+{
+  onChainUpdateCallbacks.erase (&cb);
 }
 
 } // namespace xaya

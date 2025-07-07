@@ -45,6 +45,7 @@ class ChannelManager
 public:
 
   class Callbacks;
+  class OnChainUpdateCallback;
 
 private:
 
@@ -151,6 +152,9 @@ private:
 
   /** Callbacks registered (e.g. for state updates).  */
   std::set<Callbacks*> callbacks;
+
+    /** OnChainUpdate Callbacks registered.  */
+  std::set<OnChainUpdateCallback onChainUpdateCallbacks;
 
   /**
    * Tries to apply a local move to the current state.  Returns true if
@@ -299,6 +303,16 @@ public:
    */
   void UnregisterCallback (Callbacks& cb);
 
+    /**
+   * Register a callback instance to be invoked from this manager.
+   */
+  void RegisterOnChainUpdateCallback (OnChainUpdateCallback& cb);
+
+  /**
+   * Removes a registered callback.
+   */
+  void UnregisterOnChainUpdateCallback (OnChainUpdateCallback& cb);
+
 };
 
 /**
@@ -317,6 +331,26 @@ public:
    */
   virtual void
   StateChanged ()
+  {}
+
+};
+
+/**
+ * Interface for callbacks invoked when receiving onchain updates, before passing the update to RollingState
+ */
+class ChannelManager::OnChainUpdateCallback
+{
+
+public:
+
+  OnChainUpdateCallback () = default;
+  virtual ~OnChainUpdateCallback () = default;
+
+  /**
+   * Invoked when the OnChainUpdates are received
+   */
+  virtual void
+  OnChainUpdateReceived (const proto::StateProof& proof)
   {}
 
 };
