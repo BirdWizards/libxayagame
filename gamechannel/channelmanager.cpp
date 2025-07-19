@@ -157,6 +157,18 @@ ChannelManager::ProcessStateUpdate (bool broadcast)
   NotifyStateChange ();
 }
 
+void 
+ChannelManager::RepeatStateUpdate()
+{
+  const auto& boardState = boardStates.GetLatestState();
+  int turn = boardState.WhoseTurn();
+  const auto& meta = boardStates.GetMetadata();
+  if(playerName == meta.participants(turn).name()) {
+    CHECK(offChainSender != nullptr);
+    offChainSender->SendNewState(boardStates.GetReinitId(), boardStates.GetStateProof());
+  }
+}
+
 void
 ChannelManager::ProcessOffChain (const std::string& reinitId,
                                  const proto::StateProof& proof)
