@@ -157,16 +157,19 @@ ChannelManager::ProcessStateUpdate (bool broadcast)
   NotifyStateChange ();
 }
 
-void 
+bool 
 ChannelManager::RepeatStateUpdate()
 {
   const auto& boardState = boardStates.GetLatestState();
-  int turn = boardState.WhoseTurn();
   const auto& meta = boardStates.GetMetadata();
-  if(playerName == meta.participants(turn).name()) {
+  int pCount = meta.participants_size();
+  int lastTurn = (boardState.WhoseTurn() + pCount - 1) % pCount;
+  if(playerName == meta.participants(lastTurn).name()) {
     CHECK(offChainSender != nullptr);
     offChainSender->SendNewState(boardStates.GetReinitId(), boardStates.GetStateProof());
+    return true;
   }
+  return false;
 }
 
 void

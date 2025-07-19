@@ -245,14 +245,15 @@ public:
   void ProcessLocalMove (const BoardMove& mv);
 
   /**
-   * Repeats the previously submitted move, if this move was submitted by this
-   * process. Used to solve cases where other players missed the move originally,
+   * Repeats the previously submitted move, if it was submitted by owner
+   * of this process.
+   * Used to solve cases where other players missed the move originally,
    * due to race conditions while participants are still connecting to the
    * MUC room. Also solves an issue specific to g/BW game, where a valid move
    * might not be accepted by the other participants, because they've not yet
    * received the latest GSP state.
    */
-  void RepeatStateUpdate();
+  bool RepeatStateUpdate();
 
   /**
    * Tries to process auto moves if there are ones.  If moves can be found,
