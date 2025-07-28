@@ -158,6 +158,12 @@ ChannelManager::ProcessStateUpdate (bool broadcast)
 }
 
 bool 
+ChannelManager::HasDispute() const
+{
+  return dispute != nullptr;
+}
+
+bool 
 ChannelManager::RepeatStateUpdate()
 {
   const auto& boardState = boardStates.GetLatestState();

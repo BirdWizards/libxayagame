@@ -254,6 +254,11 @@ public:
    * received the latest GSP state.
    */
   bool RepeatStateUpdate();
+  
+  /**
+   * Test if there's an active dispute on this channel
+   */
+  bool HasDispute() const;
 
   /**
    * Tries to process auto moves if there are ones.  If moves can be found,
