@@ -13,7 +13,7 @@
 #include <set>
 #include <string>
 
-#undef SendMessage;
+#undef SendMessage
 
 namespace xaya
 {
