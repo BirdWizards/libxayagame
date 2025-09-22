@@ -544,16 +544,31 @@ public:
    * Extracts the current changeset of the session as UndoData string.
    */
   UndoData
-  ExtractChangeset ()
+  ExtractChangeset (const xaya::SQLiteDatabase& db)
   {
     VLOG (1) << "Extracting recorded undo data from SQLite session";
     CHECK (session != nullptr);
 
     int changeSize;
     void* changeBytes;
-    CHECK_EQ (sqlite3session_changeset (session, &changeSize, &changeBytes),
-              SQLITE_OK)
-        << "Failed to extract current session changeset";
+
+    int cRes = sqlite3session_changeset (session, &changeSize, &changeBytes);
+    if(cRes != SQLITE_OK) {
+      auto stmt = db.PrepareRo(R"(
+        SELECT `type`, `name`, `tbl_name`, `rootpage`, `sql`
+        FROM `sqlite_schema`
+      )");
+      while(stmt.Step()) {
+        std::string typ = stmt.Get<std::string>(0);
+        std::string name = stmt.Get<std::string>(1);
+        std::string tblName = stmt.Get<std::string>(2);
+        int64_t page = stmt.Get<int64_t>(3);
+        std::string query = stmt.Get<std::string>(4);
+        LOG(ERROR) << "type: " << typ << ", name: " << name << ", tbl: " << tblName << ", page: " << page
+          << ", query: " << query;
+      }
+    }
+    CHECK_EQ (cRes, SQLITE_OK) << "Failed to extract current session changeset";
 
     UndoData result(static_cast<const char*> (changeBytes), changeSize);
     sqlite3_free (changeBytes);
@@ -582,7 +597,7 @@ SQLiteGame::ProcessForwardInternal (const GameStateData& oldState,
     ActiveAutoIds ids(*this);
     UpdateState (db, blockData);
   }
-  undo = session->ExtractChangeset ();
+  undo = session->ExtractChangeset (db);
 
   return BLOCKHASH_STATE + blockData["block"]["hash"].asString ();
 }
