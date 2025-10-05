@@ -178,6 +178,12 @@ ChannelManager::RepeatStateUpdate()
   return false;
 }
 
+const proto::StateProof& ChannelManager::GetStateProof() const
+{
+  CHECK(exists) << "Channel does not exist on chain yet";
+  return boardStates.GetStateProof();
+}
+
 void
 ChannelManager::ProcessOffChain (const std::string& reinitId,
                                  const proto::StateProof& proof)

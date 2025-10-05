@@ -304,6 +304,11 @@ public:
     const State* GetBoardState () const;
 
   /**
+   * Returns the current stateproof
+   */
+  const proto::StateProof& GetStateProof() const;
+
+  /**
    * Returns the current state of this channel as JSON, suitable to be
    * sent to frontends.
    */
