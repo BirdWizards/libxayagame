@@ -42,6 +42,15 @@ Random::Seed (const uint256& s)
   nextIndex = 0;
 }
 
+void
+Random::ReHash()
+{
+  CHECK(!seed.IsNull()) << "Cannot rehash unseeded random";
+  SHA256 hasher;
+  hasher << seed;
+  seed = hasher.Finalise();
+}
+
 Random
 Random::BranchOff (const std::string& key) const
 {

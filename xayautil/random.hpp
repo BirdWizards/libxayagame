@@ -57,6 +57,10 @@ public:
    */
   void Seed (const uint256& s);
 
+  void ReHash();
+
+  const uint256& GetSeed() const { return seed; }
+
   /**
    * Branches off a new Random instance.  The new instance will be seeded
    * based on the state of this instance and the given "key" string.  The
