@@ -54,6 +54,9 @@ ExtraVerifyStateTransition (const SignatureVerifier& verifier,
   if (!parsedNew->Equals (transition.new_state ().data ()))
     {
       LOG (WARNING) << "Wrong new state claimed in state transition";
+      parsedNew->ToJson();
+      auto parsedExpected = rules.ParseState(channelId, meta, transition.new_state().data());
+      parsedExpected->ToJson();
       return false;
     }
 
