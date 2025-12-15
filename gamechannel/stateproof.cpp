@@ -208,8 +208,6 @@ ExtendStateProof (const SignatureVerifier& verifier, SignatureSigner& signer,
     transitions.push_back (t);
   transitions.emplace_back (std::move (trans));
 
-  LOG(INFO) << "[ExtendStateProof] Transition vector: " << transitions.size();
-
   std::set<int> signatures;
   auto begin = std::prev (transitions.end ());
   const size_t n = meta.participants_size ();
@@ -218,9 +216,7 @@ ExtendStateProof (const SignatureVerifier& verifier, SignatureSigner& signer,
       const auto newSigs
           = VerifyParticipantSignatures (verifier, gameId, channelId, meta,
                                          "state", begin->new_state ());
-      LOG(INFO) << "[ExtendStateProof] Extracted " << newSigs.size() << " signatures from state";
       signatures.insert (newSigs.begin (), newSigs.end ());
-      LOG(INFO) << "[ExtendStateProof] Collected signatures: " << signatures.size() << " / " << n;
 
       CHECK_LE (signatures.size (), n);
       if (signatures.size () == n || begin == transitions.begin ())
@@ -237,7 +233,6 @@ ExtendStateProof (const SignatureVerifier& verifier, SignatureSigner& signer,
       else
         newProof.add_transitions ()->Swap (&*it);
     }
-  LOG(INFO) << "[ExtendStateProof] Extended proof transitionCount: " << newProof.transitions_size();
 
   return true;
 }
