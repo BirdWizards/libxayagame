@@ -260,7 +260,7 @@ ChannelManager::ProcessOnChain (const uint256& blk, const unsigned h,
   exists = true;
 
   for (auto* cb : onChainUpdateCallbacks)
-      cb->OnChainUpdateReceived(proof);
+      cb->OnChainUpdateReceived(proof, h);
 
   boardStates.UpdateOnChain (meta, reinitState, proof);
 

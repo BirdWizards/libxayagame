@@ -371,7 +371,7 @@ public:
    * Invoked when the OnChainUpdates are received
    */
   virtual void
-  OnChainUpdateReceived (const proto::StateProof& proof)
+  OnChainUpdateReceived (const proto::StateProof& proof, uint32_t height)
   {}
 
 };
